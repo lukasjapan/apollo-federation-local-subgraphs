@@ -1,0 +1,106 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+scalar join__FieldSet
+
+enum join__Graph {
+  SUBGRAPH1 @join__graph(name: "subgraph1", url: "http://subgraph1")
+  SUBGRAPH2 @join__graph(name: "subgraph2", url: "http://subgraph2")
+  SUBGRAPH3 @join__graph(name: "subgraph3", url: "http://localhost:4003/")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Pet
+  @join__type(graph: SUBGRAPH1, key: "id")
+  @join__type(graph: SUBGRAPH2, key: "id", resolvable: true)
+  @join__type(graph: SUBGRAPH3, key: "id")
+{
+  id: ID!
+  type: PetType! @join__field(graph: SUBGRAPH1) @join__field(graph: SUBGRAPH2, external: true)
+  name: String! @join__field(graph: SUBGRAPH1) @join__field(graph: SUBGRAPH2, external: true)
+  pettingLog: [PettingEvent!]! @join__field(graph: SUBGRAPH1, external: true) @join__field(graph: SUBGRAPH3)
+  lovedScore: Float! @join__field(graph: SUBGRAPH1, requires: "pettingLog { pettingDuration }")
+  price: Int! @join__field(graph: SUBGRAPH2, requires: "type name")
+  owner: User @join__field(graph: SUBGRAPH3)
+}
+
+type PettingEvent
+  @join__type(graph: SUBGRAPH1, key: "id")
+  @join__type(graph: SUBGRAPH3, key: "id")
+{
+  id: ID! @join__field(graph: SUBGRAPH1, external: true) @join__field(graph: SUBGRAPH3)
+  pettingDuration: Int! @join__field(graph: SUBGRAPH1, external: true) @join__field(graph: SUBGRAPH3)
+  petted: Pet! @join__field(graph: SUBGRAPH3)
+  petter: User! @join__field(graph: SUBGRAPH3)
+  timestamp: Int! @join__field(graph: SUBGRAPH3)
+}
+
+enum PetType
+  @join__type(graph: SUBGRAPH1)
+  @join__type(graph: SUBGRAPH2)
+{
+  CAT @join__enumValue(graph: SUBGRAPH1) @join__enumValue(graph: SUBGRAPH2)
+  DOG @join__enumValue(graph: SUBGRAPH1) @join__enumValue(graph: SUBGRAPH2)
+}
+
+type Query
+  @join__type(graph: SUBGRAPH1)
+  @join__type(graph: SUBGRAPH2)
+  @join__type(graph: SUBGRAPH3)
+{
+  subgraph1: String! @join__field(graph: SUBGRAPH1)
+  pets: [Pet!]! @join__field(graph: SUBGRAPH1)
+  pet(id: ID!): Pet @join__field(graph: SUBGRAPH1)
+  subgraph2: String! @join__field(graph: SUBGRAPH2)
+  petstores: [Store!]! @join__field(graph: SUBGRAPH2)
+  subgraph3: String! @join__field(graph: SUBGRAPH3)
+  me: User @join__field(graph: SUBGRAPH3)
+}
+
+type Store
+  @join__type(graph: SUBGRAPH2)
+{
+  id: ID!
+  name: String!
+  pets: [Pet!]!
+}
+
+type User
+  @join__type(graph: SUBGRAPH3, key: "id")
+{
+  id: ID!
+  name: String!
+  favoritePet: Pet
+  pettingLog: [PettingEvent!]!
+}

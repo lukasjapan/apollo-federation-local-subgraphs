@@ -1,0 +1,21 @@
+query ExampleQuery {
+  subgraph1
+  subgraph2
+  subgraph3
+  pet(id: 1) {
+    id
+    name
+    price
+    owner {
+      name
+    }
+    pettingLog {
+      petter {
+        name
+      }
+      timestamp
+      pettingDuration
+    }
+    lovedScore
+  }
+}

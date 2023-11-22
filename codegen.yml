@@ -1,0 +1,12 @@
+overwrite: true
+generates:
+  src/supergraph-types.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+    schema: ./src/supergraph.graphqls
+    documents: ./src/**/*.graphql
+    config:
+      enumsAsTypes: true
+      useImplementingTypes: true
+      typesPrefix: Gql

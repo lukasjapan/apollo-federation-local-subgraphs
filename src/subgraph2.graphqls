@@ -1,0 +1,22 @@
+enum PetType {
+  CAT
+  DOG
+}
+
+type Pet @key(fields: "id", resolvable: true) {
+  id: ID!
+  name: String! @external
+  type: PetType! @external
+  price: Int! @requires(fields: "type name")
+}
+
+type Store {
+  id: ID!
+  name: String!
+  pets: [Pet!]!
+}
+
+type Query {
+  subgraph2: String!
+  petstores: [Store!]!
+}

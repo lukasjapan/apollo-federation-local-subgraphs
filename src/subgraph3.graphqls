@@ -1,0 +1,25 @@
+type User @key(fields: "id") {
+  id: ID!
+  name: String!
+  favoritePet: Pet
+  pettingLog: [PettingEvent!]!
+}
+
+type PettingEvent @key(fields: "id") {
+  id: ID!
+  petted: Pet!
+  petter: User!
+  pettingDuration: Int!
+  timestamp: Int!
+}
+
+type Pet @key(fields: "id") {
+  id: ID!
+  owner: User
+  pettingLog: [PettingEvent!]!
+}
+
+type Query {
+  subgraph3: String!
+  me: User
+}

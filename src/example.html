@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World:</title>
+</head>
+
+<body>
+  <h1>Hello Subgraphs</h1>
+  <ul>
+    <li>{{ subgraph1 }}</li>
+    <li>{{ subgraph2 }}</li>
+    <li>{{ subgraph3 }}</li>
+  </ul>
+  <h1>Pet Details</h1>
+  <p>ID: {{ pet.id }}</p>
+  <p>Name: {{ pet.name }}</p>
+  <p>Price: ${{ pet.price }}</p>
+  <p>Owner: {{ pet.owner.name }}</p>
+
+  <h2>Petting Log</h2>
+  <table border="1">
+    <tr>
+      <th>Petter</th>
+      <th>Timestamp</th>
+      <th>Petting Duration</th>
+    </tr>
+    {{#pet.pettingLog}}
+    <tr>
+      <td>{{ petter.name }}</td>
+      <td>{{ timestamp }}</td>
+      <td>{{ pettingDuration }}</td>
+    </tr>
+    {{/pet.pettingLog}}
+  </table>
+
+  <p>Loved Score: {{pet.lovedScore}}</p>
+</body>
+
+</html>

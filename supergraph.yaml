@@ -1,0 +1,14 @@
+federation_version: =2.5.7
+subgraphs:
+  subgraph1:
+    routing_url: http://subgraph1
+    schema:
+      file: ./src/subgraph1.graphqls
+  subgraph2:
+    routing_url: http://subgraph2
+    schema:
+      file: ./src/subgraph2.graphqls
+  subgraph3:
+    routing_url: http://localhost:4003/
+    schema:
+      subgraph_url: http://localhost:4003/

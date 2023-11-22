@@ -1,0 +1,42 @@
+{
+  "name": "federated-graph-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently npm:develop-*",
+    "subgraph3": "nodemon src/subgraph3.ts",
+    "build": "tsc",
+    "serve": "node dist/supergraph.js",
+    "develop-supergraph": "nodemon --verbose src/supergraph.ts",
+    "develop-codegen": "graphql-codegen --watch --config codegen.yml",
+    "develop-schema": "nodemon --verbose --watch ./src/subgraph1.graphqls --watch ./src/subgraph2.graphqls --exec npm run compose-supergraph",
+    "codegen": "graphql-codegen --config codegen.yml",
+    "compose-supergraph": "rover supergraph compose --elv2-license accept --config ./supergraph.yaml --output ./src/supergraph.graphqls"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@apollo/rover": "^0.21.0",
+    "@types/express": "^4.17.21",
+    "@types/mustache": "^4.2.5",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^2.5.7",
+    "@apollo/server": "^4.9.5",
+    "@apollo/subgraph": "^2.5.7",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@parcel/watcher": "^2.3.0",
+    "concurrently": "^8.2.2",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
+    "mustache": "^4.2.0"
+  }
+}

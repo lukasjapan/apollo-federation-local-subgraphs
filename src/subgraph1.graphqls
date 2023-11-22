@@ -1,0 +1,23 @@
+enum PetType {
+  CAT
+  DOG
+}
+
+type PettingEvent @key(fields: "id") {
+  id: ID! @external
+  pettingDuration: Int! @external
+}
+
+type Pet @key(fields: "id") {
+  id: ID!
+  type: PetType!
+  name: String!
+  pettingLog: [PettingEvent!]! @external
+  lovedScore: Float! @requires(fields: "pettingLog { pettingDuration }")
+}
+
+type Query {
+  subgraph1: String!
+  pets: [Pet!]!
+  pet(id: ID!): Pet
+}
